@@ -20,7 +20,13 @@
     </div>
     
     <div id="label" class="flex flex-row gap-4">
-
+      <Dropdown 
+        id="invoice-client" 
+        v-model="invoice.client" 
+        @options="clients" 
+        optionLabel="name" 
+        placeholder="Select a Client" 
+        class="w-full md:w-34rem" />
     </div>
 
     <!-- Save Button -->
@@ -44,8 +50,10 @@
   
 <script setup lang="ts">
   import { Invoice, InvoiceStatusOptions } from '../../types';
+  import { Client } from '../../types';
   import { useClients } from "../../composables/useClients";
   import { useInvoices } from "../../composables/useInvoices";
+  import { useServices } from '../../composables/useServices';
   import { initializeInvoice } from '../../utils/initialize';
   import { watchImmediate } from "@vueuse/core";
 
@@ -54,8 +62,11 @@
 
   //Import the getClients function from the composable
   const { getClients } =  useClients();
+  
+  //Import the getClients function from the composable
+  const { getServices } =  useServices();
 
-
+  const clients = ref([getClients()]);
   // Define props with default value
   const props = defineProps({
     invoice: {
