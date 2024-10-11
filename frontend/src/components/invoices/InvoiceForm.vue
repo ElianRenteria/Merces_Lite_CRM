@@ -23,9 +23,9 @@
       <Dropdown 
         id="invoice-client" 
         v-model="invoice.client" 
-        @options="clients" 
+        :options="clients"
         optionLabel="name" 
-        placeholder="Select a Client" 
+        placeholder="Select a Client"
         class="w-full md:w-34rem" />
     </div>
 
@@ -49,8 +49,7 @@
 </style>
   
 <script setup lang="ts">
-  import { Invoice, InvoiceStatusOptions } from '../../types';
-  import { Client } from '../../types';
+  import { Invoice, InvoiceStatusOptions, Client } from '../../types';
   import { useClients } from "../../composables/useClients";
   import { useInvoices } from "../../composables/useInvoices";
   import { useServices } from '../../composables/useServices';
@@ -66,7 +65,7 @@
   //Import the getClients function from the composable
   const { getServices } =  useServices();
 
-  const clients = ref([getClients()]);
+  const clients = ref<Client[]>([]);
   // Define props with default value
   const props = defineProps({
     invoice: {
@@ -107,5 +106,14 @@
     }
     emits("save");
   };
+
+  onMounted (() => {
+    getClients().then((data) => {
+      if (data) {
+        clients.value =  data; 
+      }
+    });
+  });
+
 
 </script>
