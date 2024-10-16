@@ -62,7 +62,7 @@
         :modal="true"
         :visible="newInvoiceDialogVisible"
         @update:visible="newInvoiceDialogVisible = $event"
-        :style="{width: '85%', height: '85%'}"
+        :style="{width: '65%', height: '85%'}"
       >
         <InvoiceForm
           :invoice="selectedInvoice"

@@ -29,6 +29,17 @@
         class="w-full md:w-34rem" />
     </div>
 
+    <div class="flex justify-content-center flex-wrap">
+      <Button 
+      icon="pi pi-plus" 
+      severity="help" 
+      rounded 
+      outlined 
+      aria-label="add" 
+      />
+    </div>
+    
+
     <!-- Save Button -->
     <div class="p-fluid pt-4">
       <Button
