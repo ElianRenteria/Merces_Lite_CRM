@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column gap-5 w-4">
+  <div class="flex flex-column gap-5 w-5">
     <div class="flex flex-column gap-2">
       <label for="invoice-name">Name</label>
       <InputText id="invoice-name" :v-model="invoice.name" aria-describedby="username-help" />
@@ -48,10 +48,12 @@
         class="flex-grow"
         @click="saveInvoice"
       />
-    </div>
 
+      
+    </div>
   </div>
   
+  <ServiceInput />
   
 </template>
 
