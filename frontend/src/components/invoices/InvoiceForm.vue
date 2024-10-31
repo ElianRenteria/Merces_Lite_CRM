@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-column gap-5 w-4">
+  <div class="flex flex-column gap-5 w-5">
     <div class="flex flex-column gap-2">
       <label for="invoice-name">Name</label>
       <InputText id="invoice-name" :v-model="invoice.name" aria-describedby="username-help" />
@@ -20,8 +20,25 @@
     </div>
     
     <div id="label" class="flex flex-row gap-4">
-
+      <Dropdown 
+        id="invoice-client" 
+        v-model="invoice.client" 
+        :options="clients"
+        optionLabel="name" 
+        placeholder="Select a Client"
+        class="w-full md:w-34rem" />
     </div>
+
+    <div class="flex justify-content-center flex-wrap">
+      <Button 
+      icon="pi pi-plus" 
+      severity="help" 
+      rounded 
+      outlined 
+      aria-label="add" 
+      />
+    </div>
+    
 
     <!-- Save Button -->
     <div class="p-fluid pt-4">
@@ -31,10 +48,12 @@
         class="flex-grow"
         @click="saveInvoice"
       />
-    </div>
 
+      
+    </div>
   </div>
   
+  <ServiceInput />
   
 </template>
 
@@ -43,9 +62,10 @@
 </style>
   
 <script setup lang="ts">
-  import { Invoice, InvoiceStatusOptions } from '../../types';
+  import { Invoice, InvoiceStatusOptions, Client } from '../../types';
   import { useClients } from "../../composables/useClients";
   import { useInvoices } from "../../composables/useInvoices";
+  import { useServices } from '../../composables/useServices';
   import { initializeInvoice } from '../../utils/initialize';
   import { watchImmediate } from "@vueuse/core";
 
@@ -54,8 +74,11 @@
 
   //Import the getClients function from the composable
   const { getClients } =  useClients();
+  
+  //Import the getClients function from the composable
+  const { getServices } =  useServices();
 
-
+  const clients = ref<Client[]>([]);
   // Define props with default value
   const props = defineProps({
     invoice: {
@@ -96,5 +119,14 @@
     }
     emits("save");
   };
+
+  onMounted (() => {
+    getClients().then((data) => {
+      if (data) {
+        clients.value =  data; 
+      }
+    });
+  });
+
 
 </script>

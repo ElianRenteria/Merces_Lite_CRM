@@ -58,11 +58,11 @@
         ref="invoiceDialog"
         v-model="newInvoiceDialogVisible"
         header="New Invoice"
-        :maximizable="true"
+        :maximizable="false"
         :modal="true"
         :visible="newInvoiceDialogVisible"
         @update:visible="newInvoiceDialogVisible = $event"
-        @show="maximizeDialog"
+        :style="{width: '65%', height: '85%'}"
       >
         <InvoiceForm
           :invoice="selectedInvoice"
@@ -86,12 +86,6 @@
   const selectedInvoice = ref<Invoice | undefined>(undefined);
   const newInvoiceDialogVisible = ref(false);
   const invoiceDialog = ref();
-  
-  const maximizeDialog = () => {
-    if (invoiceDialog.value.maximized) return
-
-    invoiceDialog.value.maximize();
-  }
 
   const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
