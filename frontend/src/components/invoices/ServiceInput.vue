@@ -1,52 +1,58 @@
 <template>
-  <div class="border-round border-3 border-300 w-7 h-6rem mt-3 surface-overlay font-bold flex">
+  <div class="border-round border-3 border-300 w-full h-6rem mt-3 surface-overlay font-bold flex">
 
     <div>
       <div id="top-row" class="w-full flex mt-1"> 
-        <!--w-1 h-2rem flex-->
+        
         <InputText
+        v-model="title"
         type="text" 
-        placeholder="Title" 
-        class="w-5 mr-1 ml-1 h-2rem"/>
+        placeholder="Title"
+        />
 
-        <InputText 
-        :v-model="rate"
-        type="int"
-        placeholder="Rate" 
-        size="small" class="w-2 mr-1 h-2rem"/>
+        <InputNumber 
+        v-model="rate"
+        placeholder="Rate"
+        />
 
-        <InputText 
-        :v-model="quantity"
-        type="int"
+        <InputNumber
+        v-model="quantity"
         placeholder="Quantity"
-        size="small"
-        class="w-2 mr-1 h-2rem"/>
+        />
 
-        <InputText 
-        :v-model="tax"
-        type="int"
-        placeholder="Tax" 
-        size="small" 
-        class="w-1 mr-1 h-2rem"/>
-
-        <InputText 
-        :v-model="total"
-        type="int"
-        placeholder="Total" 
-        size="small" 
-        class="w-2 mr-1 h-2rem"
+        <InputNumber
+        v-model="total"
+        placeholder="Total"
+        class=""
         disabled/>
 
+        <Button 
+        label="Save" 
+        severity="success" 
+        class="h-full ml-1"
+        style="width: 80px;"
+        />
+
       </div>
 
-      <div id="bottom-row" class="w-full mt-1 flex">
+      <div id="bottom-row" class="w-full mt-2 flex">
         <InputText
+        v-model="description"
         type="text"
         placeholder="Description"
-        size="small" 
-        class="w-12 mr-1 ml-1 h-3rem"/>
+        class="w-full mb-1"
+        />
+
+        <Button 
+        label="Delete" 
+        severity="danger" 
+        class="h-full ml-1"
+        />
       </div>
+      
+      
     </div>
+      
     
   </div>
 </template>
@@ -58,11 +64,12 @@ import { useServices } from "../../composables/useServices";
 const { getServices } = useServices();
 
 const rate = ref(0);
-const quantity = ref(0);
-const tax = ref(0);
+const quantity = ref(1);
+const title = ref("");
+const description = ref("");
 
 const total = computed(() => {
-  return (rate.value * quantity.value) + ((rate.value * quantity.value) * (tax.value / 100));
+  return rate.value * quantity.value;
 });
 
 </script>
