@@ -54,8 +54,9 @@
           </IconField>
         </div>
       </template>
-      <Column field="name" header="Name"></Column>
-      <Column field="price" header="Price" sortable>
+      <Column field="name" header="Name" style="width: 30%;"></Column>
+      <Column field="description" header="Description" style="width: 50%;"></Column>
+      <Column field="price" header="Price/Unit" style="width: 20%;" sortable>
         <template #body="{ data }">
           {{ formatCurrency(data.price) }}
         </template>
