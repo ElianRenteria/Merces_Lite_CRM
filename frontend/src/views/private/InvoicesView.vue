@@ -55,12 +55,14 @@
         <Column field="email" header="Email"></Column>
       </DataTable>
       <Dialog
+        ref="invoiceDialog"
         v-model="newInvoiceDialogVisible"
         header="New Invoice"
-        :maximizable="true"
+        :maximizable="false"
         :modal="true"
         :visible="newInvoiceDialogVisible"
         @update:visible="newInvoiceDialogVisible = $event"
+        :style="{width: '65%', height: '85%'}"
       >
         <InvoiceForm
           :invoice="selectedInvoice"
@@ -83,7 +85,8 @@
   const invoices = ref<Invoice[]>([]);
   const selectedInvoice = ref<Invoice | undefined>(undefined);
   const newInvoiceDialogVisible = ref(false);
-  
+  const invoiceDialog = ref();
+
   const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
