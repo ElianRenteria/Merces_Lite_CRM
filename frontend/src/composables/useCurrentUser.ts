@@ -11,6 +11,7 @@ export function useCurrentUser() {
     const response = await client.get("/auth/me");
     const user_object = response.data as CurrentUser;
     state.user = user_object;
+    return user_object;
   }
 
   const initials = computed(() => {

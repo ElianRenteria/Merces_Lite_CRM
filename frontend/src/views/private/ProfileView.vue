@@ -1,15 +1,21 @@
 <script lang="ts" setup>
     import { useCurrentUser } from "../../composables/useCurrentUser";
-    const { user, initials } = useCurrentUser();
+    const { user, initials, load } = useCurrentUser();
     const first_name = ref('');
     const last_name = ref('');
     const date_of_birth = ref('');
     const email = ref('');
-    onMounted(() => {
-        first_name.value = user.first_name;
-        last_name.value = user.last_name;
-        date_of_birth.value = user.date_of_birth;
-        email.value = user.email;
+    onMounted(async() => {
+      const loadedUser = await load();
+      console.log(loadedUser);
+      if (loadedUser) {
+        first_name.value = loadedUser.first_name;
+        last_name.value = loadedUser.last_name;
+        date_of_birth.value = loadedUser.date_of_birth;
+        email.value = loadedUser.email;
+      } else {
+        console.log('No user found');
+      }
     });
 </script>
 
