@@ -13,6 +13,7 @@ class ServiceBase(BaseModel):
     """
     name: str
     price: float
+    description: str = ""
 
 
 class ServiceCreate(ServiceBase):
