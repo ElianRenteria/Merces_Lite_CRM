@@ -5,13 +5,13 @@
       <div id="top-row" class="w-full flex mt-1"> 
         
         <InputText
-        v-model="title"
+        v-model="service.name"
         type="text" 
         placeholder="Title"
         />
 
         <InputNumber 
-        v-model="rate"
+        v-model="service.price"
         placeholder="Rate"
         />
 
@@ -37,7 +37,7 @@
 
       <div id="bottom-row" class="w-full mt-2 flex">
         <InputText
-        v-model="description"
+        v-model="service.description"
         type="text"
         placeholder="Description"
         class="w-full mb-1"
@@ -47,6 +47,7 @@
         label="Delete" 
         severity="danger" 
         class="h-full ml-1"
+        @click="emits('delete')"
         />
       </div>
       
@@ -63,13 +64,14 @@ import { useServices } from "../../composables/useServices";
 
 const { getServices } = useServices();
 
-const rate = ref(0);
+const service = defineModel<Service>({required: true});
+
 const quantity = ref(1);
-const title = ref("");
-const description = ref("");
+
+const emits = defineEmits(['delete', 'save']);
 
 const total = computed(() => {
-  return rate.value * quantity.value;
+  return service.value.price * quantity.value;
 });
 
 </script>

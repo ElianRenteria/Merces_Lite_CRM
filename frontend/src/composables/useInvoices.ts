@@ -1,5 +1,5 @@
 import { useToastService } from "./useToastService";
-import { Invoice } from "../types";
+import { CreateInvoice, Invoice } from "../types";
 import HttpClient from "../utils/httpClient";
 
 export function useInvoices() {
@@ -20,7 +20,7 @@ export function useInvoices() {
     }
   }
 
-  async function createInvoices(_invoice: Invoice) {
+  async function createInvoices(_invoice: CreateInvoice) {
     /**
      * TODO: TOAST FUNCTIONALITY
      * Implement toast messages for success and error cases.
@@ -32,7 +32,7 @@ export function useInvoices() {
       const response = await client.post("/invoices", _invoice);
       toast.present(
         response.status === 200 ? "success" : "error",
-        `${_invoice.name} ${response.status === 200 ? "created successfully" : "failed to create"}.`,
+        `${_invoice.invoice_number} ${response.status === 200 ? "created successfully" : "failed to create"}.`,
         {
           title:
             response.status === 200 ? "Creation Successful" : "Creation Failed",
