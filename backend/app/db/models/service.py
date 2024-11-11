@@ -10,6 +10,7 @@ class Service(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Float)
+    description = Column(String, nullable=False, default="")
     created_by = Column(Integer, ForeignKey('users.id'))
 
     invoice_services = relationship(
