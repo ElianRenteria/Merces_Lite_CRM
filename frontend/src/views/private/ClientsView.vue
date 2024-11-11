@@ -79,6 +79,7 @@
         :client="selectedClient"
         @save="
           newClientDialogVisible = false;
+          selectedClient = undefined;
           loadClients();
         "
       />
