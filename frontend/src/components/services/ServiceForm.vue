@@ -3,19 +3,26 @@
     <!-- Row with Name and Price inputs -->
     <div class="flex flex-row gap-3">
       <div class="flex flex-column gap-2 flex-grow">
-        <label for="name">Name</label>
-        <InputText id="name" v-model="service.name" />
+        <label for="name">Name*</label>
+        <InputText
+          id="name"
+          v-model="service.name"
+          :class="{ 'p-invalid': errors.name }"
+        />
+        <small v-if="errors.name" class="p-error">Name is required</small>
       </div>
 
       <div class="flex flex-column gap-2 flex-grow">
-        <label for="price">Price</label>
+        <label for="price">Price*</label>
         <InputNumber
           id="price"
           v-model="service.price"
           mode="currency"
           currency="USD"
           locale="en-US"
+          :class="{ 'p-invalid': errors.price }"
         />
+        <small v-if="errors.price" class="p-error">Price is required</small>
         <label for="name" class="text-xs text-color-secondary">
           Unit Price
         </label>
@@ -41,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { Service } from "../../types/Service";
 import { useServices } from "../../composables/useServices";
 import { initializeService } from "../../utils/initialize";
@@ -60,6 +68,12 @@ const props = defineProps({
 // Use a reactive reference for service state management
 const service = ref<Service>(props.service);
 
+// Define validation errors object
+const errors = ref({
+  name: false,
+  price: false,
+});
+
 // Define emits
 const emits = defineEmits(["save"]);
 
@@ -75,14 +89,40 @@ watchImmediate(props, (updated) => {
   }
 });
 
+// Function to reset the form
+const resetService = () => {
+  service.value.price = 0;
+  service.value.description = "";
+  service.value.name = "";
+};
+
 const saveService = async () => {
+  // Validate Name and Price fields
+  errors.value.name = !service.value.name;
+  errors.value.price = service.value.price == null || service.value.price === "";
+
+  // If any validation error exists, prevent saving
+  if (errors.value.name || errors.value.price) return;
+
+  // Proceed with save
   if (editMode.value) {
-    // Update Service
-    await updateService(props.service);
+    await updateService(service.value);
   } else {
-    // Create Service
-    await createService(props.service);
+    await createService(service.value);
   }
+  // Clear the service fields and errors after successful save
+  resetService();
+  // Emit save event
   emits("save");
 };
 </script>
+
+<style scoped>
+.p-invalid {
+  border-color: #f44336;
+}
+.p-error {
+  color: #f44336;
+  font-size: 0.875rem;
+}
+</style>

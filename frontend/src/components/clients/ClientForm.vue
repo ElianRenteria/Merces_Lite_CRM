@@ -2,8 +2,13 @@
   <!-- Name, Company Name, and Primary Contact Name -->
   <div class="flex flex-row gap-3 py-3">
     <div class="flex flex-column gap-2">
-      <label for="name">Name</label>
-      <InputText id="name" v-model="client.name" />
+      <label for="name">Name*</label>
+      <InputText
+        id="name"
+        v-model="client.name"
+        :class="{ 'p-invalid': errors.name }"
+      />
+      <small v-if="errors.name" class="p-error">Name is required</small>
       <label for="name" class="text-xs text-color-secondary">
         Full name of the client or company
       </label>
@@ -17,9 +22,12 @@
     </div>
     <div class="flex flex-column gap-2">
       <label for="email">Primary Contact</label>
-      <InputText id="email" v-model="client.email" />
+      <InputText
+        id="email"
+        v-model="client.email"
+      />
       <label for="name" class="text-xs text-color-secondary">
-        Name of the primary contact person for the client
+        primary contact email
       </label>
     </div>
   </div>
@@ -70,11 +78,16 @@
     </div>
     <div class="flex flex-column gap-2">
       <label for="facsimile">Fax</label>
-      <InputText id="fascimile" v-model="client.facsimile" />
+      <InputText id="facsimile" v-model="client.facsimile" />
     </div>
     <div class="flex flex-column gap-2">
-      <label for="email">Email</label>
-      <InputText id="email" v-model="client.email" />
+      <label for="email">Email*</label>
+      <InputText
+        id="email"
+        v-model="client.email"
+        :class="{ 'p-invalid': errors.email }"
+      />
+      <small v-if="errors.email" class="p-error">Email is required</small>
     </div>
   </div>
   <Divider />
@@ -182,6 +195,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { Client, ClientStatusOptions, Industries } from "../../types";
 import { useClients } from "../../composables/useClients";
 import { initializeClient } from "../../utils/initialize";
@@ -200,20 +214,24 @@ const props = defineProps({
 
 // Use a reactive reference for client state management
 const client = ref<Client>(props.client);
+// Define emits
+const emits = defineEmits(["save"]);
 
 // Define refs
 const clientStatusOptions = ref(ClientStatusOptions);
 const industryOptions = ref(Object.values(Industries));
 
-// Define emits
-const emits = defineEmits(["save"]);
+// Define validation errors object
+const errors = ref({
+  name: false,
+  email: false,
+});
 
 // Define computed properties
 const editMode = computed(() => !!props.client?.id);
 
 // Watch for changes in the prop and reset if unassigned
 watchImmediate(props, (updated) => {
-  console.log(`Props Updated: ${updated}`);
   if (!updated.client) {
     client.value = initializeClient();
   } else {
@@ -231,14 +249,59 @@ const copyBillingAddress = () => {
   client.value.address_country = client.value.billing_address_country;
 };
 
+const resetClient= ()=> {
+  client.value.address_city = ""
+  client.value.address_country = ""
+  client.value.address_line1 = ""
+  client.value.address_line2 = ""
+  client.value.address_postal_code = ""
+  client.value.address_state = ""
+  client.value.billing_address_city = ""
+  client.value.billing_address_country = ""
+  client.value.billing_address_line1 = ""
+  client.value.billing_address_line2 = ""
+  client.value.billing_address_postal_code = ""
+  client.value.billing_address_state = ""
+  client.value.company_name = ""
+  client.value.email = ""
+  client.value.facsimile = ""
+  client.value.industry = ""
+  client.value.name = ""
+  client.value.notes = ""
+  client.value.phone = ""
+  client.value.status = "active"
+  client.value.website = ""
+}
+
+// Save client with validation
 const saveClient = async () => {
+  // Reset errors
+  errors.value.name = !client.value.name;
+  errors.value.email = !client.value.email;
+
+  // If any errors exist, prevent saving
+  if (errors.value.name || errors.value.email) return;
+
+  // Proceed with save
   if (editMode.value) {
-    // Update Client
     await updateClient(client.value);
   } else {
-    // Create Client
     await createClient(client.value);
   }
+  resetClient();
+  errors.value.name = false;
+  errors.value.email = false;
+
   emits("save");
 };
 </script>
+
+<style scoped>
+.p-invalid {
+  border-color: #f44336;
+}
+.p-error {
+  color: #f44336;
+  font-size: 0.875rem;
+}
+</style>
